@@ -3,4 +3,9 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+    <color name="approveButtonBack">#7CFC00</color>
+    <color name="approveButtonText">#006400</color>
+    <color name="CamcelButtonBack">#FA8072</color>
+    <color name="CamcelButtonText">#800000</color>
+    <color name="backGrey">#faebd7</color>
 </resources>

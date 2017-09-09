@@ -54,4 +54,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         MenuItem menuItem = menu.findItem(R.id.item_add_photo);
         return true;
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        if(item.getItemId() == R.id.item_add_photo){
+
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
 }
