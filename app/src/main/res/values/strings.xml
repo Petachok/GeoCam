@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">GeoCam</string>
-    <string name="title_activity_maps">Map</string>
+    <string name="title_activity_maps">GeoCam Map</string>
+    <string name="action_add_Photo">Add Photo</string>
 </resources>
