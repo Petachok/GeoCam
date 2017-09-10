@@ -36,6 +36,8 @@ public class AddPhoto extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_photo);
 
+        //initializing the location managment tools
+        locationInit();
 
         mPhotoPreview = (ImageView) findViewById(R.id.image_photo_pre);
         mPhotoDescription = (EditText) findViewById(R.id.text_photo_description);
@@ -43,24 +45,11 @@ public class AddPhoto extends AppCompatActivity {
         mApproveB = (Button) findViewById(R.id.action_approve);
         mCancelB = (Button) findViewById(R.id.action_cancel);
 
-        locationInit();
         //intent to take a picture using the camera
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
             startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
         }
-
-        /*
-        //when focus is on the EditText, default description disappears
-        mPhotoDescription.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if(hasFocus){
-
-                }
-            }
-        });
-        */
 
         mPhotoDescription.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -90,6 +79,8 @@ public class AddPhoto extends AppCompatActivity {
         if(pm.checkPermission(Manifest.permission.ACCESS_FINE_LOCATION, getApplicationContext().getPackageName()) == PackageManager.PERMISSION_GRANTED)
             lastKnownLocation = locationManager.getLastKnownLocation(locationProvider);
 
+        mPhotoLocation.setText("Lat: " + lastKnownLocation.getLatitude() + " Long: " + lastKnownLocation.getLongitude());
+
         // Define a listener that responds to location updates
         LocationListener locationListener = new LocationListener() {
             public void onLocationChanged(Location location) {
@@ -98,10 +89,10 @@ public class AddPhoto extends AppCompatActivity {
 
             public void onStatusChanged(String provider, int status, Bundle extras) {}
             public void onProviderEnabled(String provider) {}
-            public void onProviderDisabled(String provider) {
+            public void onProviderDisabled(String provider) {}
 
-            }
             void makeUseOfNewLocation(Location location){
+                mPhotoLocation.setText("Lat: " + location.getLatitude() + " Long: " + location.getLongitude());
             }
 
         };
@@ -109,8 +100,6 @@ public class AddPhoto extends AppCompatActivity {
         // Register the listener with the Location Manager to receive location updates
         if(pm.checkPermission(Manifest.permission.ACCESS_FINE_LOCATION, getApplicationContext().getPackageName()) == PackageManager.PERMISSION_GRANTED)
             locationManager.requestLocationUpdates(GPS_PROVIDER, 0, 0, locationListener);
-
-        mPhotoLocation.setText("Lat: " + lastKnownLocation.getLatitude() + " Long: " + lastKnownLocation.getLongitude());
     }
 
     protected boolean isBetterLocation(Location location, Location currentBestLocation) {
