@@ -2,6 +2,6 @@
     <string name="app_name">GeoCam</string>
     <string name="title_activity_maps">GeoCam Map</string>
     <string name="action_add_Photo">Add Photo</string>
-    <string name="et_photo_description">Enter the description of the photo</string>
+    <string name="et_photo_description">Describe what you see</string>
     <string name="tv_Lat_Long">Latitude and Longitude</string>
 </resources>

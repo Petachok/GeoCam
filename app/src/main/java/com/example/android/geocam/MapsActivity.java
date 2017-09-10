@@ -1,5 +1,6 @@
 package com.example.android.geocam;
 
+import android.content.Intent;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -57,9 +58,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
         if(item.getItemId() == R.id.item_add_photo){
-
+            Intent intent = new Intent(getApplicationContext(),AddPhoto.class);
+            startActivity(intent);
         }
 
         return super.onOptionsItemSelected(item);

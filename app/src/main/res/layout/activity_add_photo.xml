@@ -9,14 +9,14 @@
     tools:context="com.example.android.geocam.AddPhoto">
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/image_photo_pre"
         android:layout_width="match_parent"
         android:layout_height="400dp"
         android:layout_margin="8dp"
         app:srcCompat="@color/common_google_signin_btn_text_dark_disabled" />
 
     <EditText
-        android:id="@+id/editText"
+        android:id="@+id/text_photo_description"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="20"
@@ -26,7 +26,8 @@
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:inputType="textPersonName"
-        android:text="@string/et_photo_description" />
+        android:text="@string/et_photo_description"
+        android:maxLength="20"/>
 
     <TextView
         android:id="@+id/textView"
