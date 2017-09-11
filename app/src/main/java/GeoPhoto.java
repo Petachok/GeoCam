@@ -2,10 +2,7 @@ import android.graphics.Path;
 
 import com.google.android.gms.maps.model.LatLng;
 
-/**
- * Created by natan on 11-Sep-17.
- */
-
+// Class for storing the data of a new added photo
 public class GeoPhoto {
     private Path takenPhotoPath;
     private String photoDescription;

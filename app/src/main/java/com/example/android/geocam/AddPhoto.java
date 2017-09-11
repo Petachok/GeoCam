@@ -1,34 +1,31 @@
 package com.example.android.geocam;
 
 import android.Manifest;
-import android.content.Context;
+import android.app.LauncherActivity;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
+import android.os.PersistableBundle;
 import android.provider.MediaStore;
+import android.support.annotation.Nullable;
 import android.support.annotation.RequiresPermission;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import static android.location.LocationManager.GPS_PROVIDER;
-
 public class AddPhoto extends AppCompatActivity {
 
-    private static final int THIRTY_SECONDS = 1000 * 30;
     private ImageView mPhotoPreview;
     private EditText mPhotoDescription;
     private TextView mPhotoLocation;
     private Button mApproveB;
     private Button mCancelB;
     static final int REQUEST_IMAGE_CAPTURE = 1; //static variable for taking picture using the camera intent
+    private LocationDetector myloc;
 
     @Override
     @RequiresPermission (Manifest.permission.ACCESS_FINE_LOCATION)
@@ -36,14 +33,15 @@ public class AddPhoto extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_photo);
 
-        //initializing the location managment tools
-        locationInit();
-
         mPhotoPreview = (ImageView) findViewById(R.id.image_photo_pre);
         mPhotoDescription = (EditText) findViewById(R.id.text_photo_description);
         mPhotoLocation = (TextView) findViewById(R.id.text_photo_long_lang);
         mApproveB = (Button) findViewById(R.id.action_approve);
         mCancelB = (Button) findViewById(R.id.action_cancel);
+
+        myloc = new LocationDetector(AddPhoto.this);
+        if(!myloc.isGPSEnabled)
+            myloc.showSettingsAlert();
 
         //intent to take a picture using the camera
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -51,6 +49,7 @@ public class AddPhoto extends AppCompatActivity {
             startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
         }
 
+        // Removing Description text to allow input of The Users description of the photo
         mPhotoDescription.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
@@ -58,6 +57,31 @@ public class AddPhoto extends AppCompatActivity {
                     mPhotoDescription.setText("");
             }
         });
+    }
+    /*
+    @Override
+    public void onBackPressed() {
+    }
+    */
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Double myLat = 0.0;
+        Double myLong = 0.0;
+        if (myloc.canGetLocation) {
+            myLat = myloc.getLatitude();
+            myLong = myloc.getLongitude();
+
+            Log.v("get location values", Double.toString(myLat) + "  " + Double.toString(myLong));
+            mPhotoLocation.setText("Lat: " + myLat.toString() + " Long: " + myLong.toString());
+        }
+    }
+
+    @Override
+    public void onPostCreate(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {
+        super.onPostCreate(savedInstanceState,persistentState);
+
     }
 
     @Override
@@ -68,88 +92,5 @@ public class AddPhoto extends AppCompatActivity {
             mPhotoPreview.setImageBitmap(imageBitmap);
         }
     }
-
-    protected void locationInit(){
-        // Acquire a reference to the system Location Manager
-        LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
-        String locationProvider = GPS_PROVIDER;
-        Location lastKnownLocation = new Location(GPS_PROVIDER);
-        Location photoLocation = new Location(GPS_PROVIDER);
-        PackageManager pm = getApplicationContext().getPackageManager();
-        if(pm.checkPermission(Manifest.permission.ACCESS_FINE_LOCATION, getApplicationContext().getPackageName()) == PackageManager.PERMISSION_GRANTED)
-            lastKnownLocation = locationManager.getLastKnownLocation(locationProvider);
-
-        mPhotoLocation.setText("Lat: " + lastKnownLocation.getLatitude() + " Long: " + lastKnownLocation.getLongitude());
-
-        // Define a listener that responds to location updates
-        LocationListener locationListener = new LocationListener() {
-            public void onLocationChanged(Location location) {
-                makeUseOfNewLocation(location);
-            }
-
-            public void onStatusChanged(String provider, int status, Bundle extras) {}
-            public void onProviderEnabled(String provider) {}
-            public void onProviderDisabled(String provider) {}
-
-            void makeUseOfNewLocation(Location location){
-                mPhotoLocation.setText("Lat: " + location.getLatitude() + " Long: " + location.getLongitude());
-            }
-
-        };
-
-        // Register the listener with the Location Manager to receive location updates
-        if(pm.checkPermission(Manifest.permission.ACCESS_FINE_LOCATION, getApplicationContext().getPackageName()) == PackageManager.PERMISSION_GRANTED)
-            locationManager.requestLocationUpdates(GPS_PROVIDER, 0, 0, locationListener);
-    }
-
-    protected boolean isBetterLocation(Location location, Location currentBestLocation) {
-        if (currentBestLocation == null) {
-            // A new location is always better than no location
-            return true;
-        }
-
-        // Check whether the new location fix is newer or older
-        long timeDelta = location.getTime() - currentBestLocation.getTime();
-        boolean isSignificantlyNewer = timeDelta > THIRTY_SECONDS;
-        boolean isSignificantlyOlder = timeDelta < -THIRTY_SECONDS;
-        boolean isNewer = timeDelta > 0;
-
-        // If it's been more than two minutes since the current location, use the new location
-        // because the user has likely moved
-        if (isSignificantlyNewer) {
-            return true;
-        // If the new location is more than two minutes older, it must be worse
-        } else if (isSignificantlyOlder) {
-            return false;
-        }
-
-        // Check whether the new location fix is more or less accurate
-        int accuracyDelta = (int) (location.getAccuracy() - currentBestLocation.getAccuracy());
-        boolean isLessAccurate = accuracyDelta > 0;
-        boolean isMoreAccurate = accuracyDelta < 0;
-        boolean isSignificantlyLessAccurate = accuracyDelta > 200;
-
-        // Check if the old and new location are from the same provider
-        boolean isFromSameProvider = isSameProvider(location.getProvider(),currentBestLocation.getProvider());
-
-        // Determine location quality using a combination of timeliness and accuracy
-        if (isMoreAccurate) {
-            return true;
-            } else if (isNewer && !isLessAccurate) {
-               return true;
-                } else if (isNewer && !isSignificantlyLessAccurate && isFromSameProvider) {
-                    return true;
-                    }
-        return false;
-    }
-
-    /** Checks whether two providers are the same */
-    private boolean isSameProvider(String provider1, String provider2) {
-        if (provider1 == null) {
-            return provider2 == null;
-            }
-        return provider1.equals(provider2);
-    }
-
-
 }
+
