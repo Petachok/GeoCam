@@ -40,7 +40,7 @@ public final class LocationDetector implements LocationListener{
 
     public LocationDetector(Context context) {
         this.mContext = context;
-        getLocation();
+        location = getLocation();
     }
 
     /**
@@ -49,18 +49,20 @@ public final class LocationDetector implements LocationListener{
      * @return
      */
     public Location getLocation() {
+
         try {
+
             locationManager = (LocationManager) mContext.getSystemService(Context.LOCATION_SERVICE);
 
             // getting GPS status
             isGPSEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
 
-            // Log.v("isGPSEnabled", "=" + isGPSEnabled);
+            Log.v("isGPSEnabled", "= " + isGPSEnabled);
 
             // getting network status
             isNetworkEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
 
-            // Log.v("isNetworkEnabled", "=" + isNetworkEnabled);
+            Log.v("isNetworkEnabled", "= " + isNetworkEnabled);
 
             if (isGPSEnabled == false && isNetworkEnabled == false) {
                 // no network provider is enabled
@@ -74,14 +76,15 @@ public final class LocationDetector implements LocationListener{
                         if (location != null) {
                             latitude = location.getLatitude();
                             longitude = location.getLongitude();
+                            Log.v("Location from Network","Lat: " + latitude + "   " + "Long: " + longitude);
                         }
                     }
                 }
-                // if GPS Enabled get lat/long using GPS Services
+                // if GPS Enabled get lat/long using GPS Services (gets location from GPS if didn't get from the network)
                 if (isGPSEnabled) {
                     if (location == null) {
                         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, MIN_TIME_BW_UPDATES, MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
-                        Log.d("GPS Enabled", "GPS Enabled");
+                        Log.v("GPS Enabled", "GPS Enabled");
                         if (locationManager != null) {
                             location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
                             if (location != null) {
@@ -126,9 +129,9 @@ public final class LocationDetector implements LocationListener{
      * Function to get longitude
      * */
     public double getLongitude() {
-        if (location != null) {
+       if (location != null) {
             longitude = location.getLongitude();
-        }
+       }
 
         // return longitude
         return longitude;
@@ -151,7 +154,7 @@ public final class LocationDetector implements LocationListener{
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext);
 
         // Setting Dialog Title
-        alertDialog.setTitle("GPS Configuration");
+        alertDialog.setTitle("Better with GPS On");
 
         // Setting Dialog Message
         alertDialog.setMessage("GPS is not enabled. Do you want to go to settings menu?");

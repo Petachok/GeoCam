@@ -1,23 +1,24 @@
 package com.example.android.geocam;
 
 import android.Manifest;
-import android.app.LauncherActivity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.os.PersistableBundle;
 import android.provider.MediaStore;
-import android.support.annotation.Nullable;
 import android.support.annotation.RequiresPermission;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class AddPhoto extends AppCompatActivity {
+import java.io.Serializable;
+
+public class AddPhoto extends AppCompatActivity implements Serializable{
 
     private ImageView mPhotoPreview;
     private EditText mPhotoDescription;
@@ -26,6 +27,8 @@ public class AddPhoto extends AppCompatActivity {
     private Button mCancelB;
     static final int REQUEST_IMAGE_CAPTURE = 1; //static variable for taking picture using the camera intent
     private LocationDetector myloc;
+    double myLat = 0.0;
+    double myLong = 0.0;
 
     @Override
     @RequiresPermission (Manifest.permission.ACCESS_FINE_LOCATION)
@@ -58,30 +61,22 @@ public class AddPhoto extends AppCompatActivity {
             }
         });
     }
-    /*
+
     @Override
     public void onBackPressed() {
+        super.onBackPressed();
+        InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
     }
-    */
 
     @Override
     protected void onStart() {
         super.onStart();
-        Double myLat = 0.0;
-        Double myLong = 0.0;
-        if (myloc.canGetLocation) {
-            myLat = myloc.getLatitude();
-            myLong = myloc.getLongitude();
-
-            Log.v("get location values", Double.toString(myLat) + "  " + Double.toString(myLong));
-            mPhotoLocation.setText("Lat: " + myLat.toString() + " Long: " + myLong.toString());
-        }
-    }
-
-    @Override
-    public void onPostCreate(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {
-        super.onPostCreate(savedInstanceState,persistentState);
-
+        mApproveB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+            }
+        });
     }
 
     @Override
@@ -91,6 +86,16 @@ public class AddPhoto extends AppCompatActivity {
             Bitmap imageBitmap = (Bitmap) extras.get("data");
             mPhotoPreview.setImageBitmap(imageBitmap);
         }
+        // entering the Latitude and Longitude of the photo for preview
+        if (myloc.canGetLocation) {
+            myLat = myloc.getLatitude();
+            myLong = myloc.getLongitude();
+            String latLngToPrint = String.format("Lat: %.3f Long: %.3f",myLat,myLong); // message to be shown on the screen
+
+            Log.v("Location values", "Latitude: " + myLat + " Longitude: " + myLong);
+            mPhotoLocation.setText(latLngToPrint);
+        }
     }
+
 }
 
