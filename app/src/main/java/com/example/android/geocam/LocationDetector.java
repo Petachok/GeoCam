@@ -65,6 +65,8 @@ public final class LocationDetector implements LocationListener{
             Log.v("isNetworkEnabled", "= " + isNetworkEnabled);
 
             if (isGPSEnabled == false && isNetworkEnabled == false) {
+                Log.v("NoLocation", "-> No Location Services Active");
+                //showSettingsAlert();
                 // no network provider is enabled
             } else {
                 this.canGetLocation = true;
@@ -143,13 +145,21 @@ public final class LocationDetector implements LocationListener{
      * @return boolean
      * */
     public boolean canGetLocation() {
-        return this.canGetLocation;
+        if(isGPSEnabled || isNetworkEnabled){
+            return true;
+        }
+        else{
+            return false;
+        }
+
     }
+
 
     /**
      * Function to show settings alert dialog On pressing Settings button will
      * lauch Settings Options
      * */
+    /*
     public void showSettingsAlert() {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext);
 
@@ -177,6 +187,7 @@ public final class LocationDetector implements LocationListener{
         // Showing Alert Message
         alertDialog.show();
     }
+    */
 
     @Override
     public void onLocationChanged(Location location) {

@@ -37,7 +37,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".AddPhoto">
+        <activity
+            android:name=".AddPhoto"
+            android:screenOrientation="portrait">
             <uses-feature
                 android:name="android.hardware.camera"
                 android:required="true"/>

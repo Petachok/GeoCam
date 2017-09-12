@@ -21,22 +21,17 @@
         android:layout_height="wrap_content"
         android:ems="20"
         android:textSize="24sp"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
+        android:layout_margin="8dp"
         android:inputType="textPersonName"
         android:text="@string/et_photo_description"
-        android:maxLength="20"/>
+        android:maxLength="20"
+        style="@style/AppTheme"/>
 
     <TextView
         android:id="@+id/text_photo_long_lang"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginRight="8dp"
+        android:layout_margin="8dp"
         android:paddingLeft="5dp"
         android:textSize="24sp"
         android:text="@string/tv_Lat_Long" />

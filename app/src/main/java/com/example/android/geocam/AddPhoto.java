@@ -9,26 +9,30 @@ import android.support.annotation.RequiresPermission;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.io.Serializable;
+import com.google.android.gms.maps.model.LatLng;
 
-public class AddPhoto extends AppCompatActivity implements Serializable{
+public class AddPhoto extends AppCompatActivity{
 
     private ImageView mPhotoPreview;
     private EditText mPhotoDescription;
     private TextView mPhotoLocation;
     private Button mApproveB;
     private Button mCancelB;
-    static final int REQUEST_IMAGE_CAPTURE = 1; //static variable for taking picture using the camera intent
+    static final int REQUEST_IMAGE_CAPTURE = 1; //request code of image capture
     private LocationDetector myloc;
     double myLat = 0.0;
     double myLong = 0.0;
+
+    private GeoPhoto geoPhoto;
 
     @Override
     @RequiresPermission (Manifest.permission.ACCESS_FINE_LOCATION)
@@ -42,9 +46,10 @@ public class AddPhoto extends AppCompatActivity implements Serializable{
         mApproveB = (Button) findViewById(R.id.action_approve);
         mCancelB = (Button) findViewById(R.id.action_cancel);
 
+        geoPhoto = new GeoPhoto();
+
+        //LocationDetectorOBject for fetching the location where the photo is taken
         myloc = new LocationDetector(AddPhoto.this);
-        if(!myloc.isGPSEnabled)
-            myloc.showSettingsAlert();
 
         //intent to take a picture using the camera
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -64,7 +69,6 @@ public class AddPhoto extends AppCompatActivity implements Serializable{
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
         InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
     }
@@ -72,9 +76,30 @@ public class AddPhoto extends AppCompatActivity implements Serializable{
     @Override
     protected void onStart() {
         super.onStart();
+        mPhotoDescription.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if(actionId == EditorInfo.IME_ACTION_DONE){
+                    geoPhoto.setPhotoDescription(mPhotoDescription.getText().toString());
+                }
+                return false;
+            }
+        });
+
         mApproveB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                LatLng photoLatLng = new LatLng(myLat,myLong);
+                geoPhoto.setPhotoLocation(photoLatLng);
+            }
+        });
+        mCancelB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent();
+                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                setResult(RESULT_CANCELED);
+                finish();
             }
         });
     }
@@ -86,7 +111,6 @@ public class AddPhoto extends AppCompatActivity implements Serializable{
             Bitmap imageBitmap = (Bitmap) extras.get("data");
             mPhotoPreview.setImageBitmap(imageBitmap);
         }
-        // entering the Latitude and Longitude of the photo for preview
         if (myloc.canGetLocation) {
             myLat = myloc.getLatitude();
             myLong = myloc.getLongitude();

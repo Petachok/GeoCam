@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "577839433305",
+    "project_id": "geocam-179420"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:577839433305:android:cc6ae32f0d1d87fc",
+        "android_client_info": {
+          "package_name": "com.example.android.geocam"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "577839433305-kfshtlg3mot1qin5jgn020nej0moquuh.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "577839433305-84d4sef5dj5t0ld4rak8ko5dln9249cv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.android.geocam",
+            "certificate_hash": "c17ee063bac9b9baf0767aa08c4f254152e7c786"
+          }
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDY7j6TrIQvqJXgupQ9CMs5zjl3SWgRT_w"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
