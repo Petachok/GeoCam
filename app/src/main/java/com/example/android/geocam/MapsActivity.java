@@ -48,6 +48,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         mainContext = MapsActivity.this;
 
+        Intent signInIntent = new Intent(getApplicationContext(),SignInActivity.class);
+        startActivity(signInIntent);
+
         // granting permission for using location if not granted yet
         if (ContextCompat.checkSelfPermission(MapsActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(MapsActivity.this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_REQUEST);

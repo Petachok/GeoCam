@@ -120,6 +120,5 @@ public class AddPhoto extends AppCompatActivity{
             mPhotoLocation.setText(latLngToPrint);
         }
     }
-
 }
 
