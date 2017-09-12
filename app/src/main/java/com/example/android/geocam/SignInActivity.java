@@ -30,9 +30,7 @@ import com.google.android.gms.common.api.Status;
 
  */
 
-public class SignInActivity extends AppCompatActivity implements
-
-        GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
+public class SignInActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
 
     private static final String TAG = "SignInActivity";
     private static final int RC_SIGN_IN = 9001;
@@ -54,6 +52,7 @@ public class SignInActivity extends AppCompatActivity implements
         findViewById(R.id.sign_in_button).setOnClickListener(this);
         findViewById(R.id.sign_out_button).setOnClickListener(this);
         findViewById(R.id.disconnect_button).setOnClickListener(this);
+        findViewById(R.id.button_go_to_map).setOnClickListener(this);
 
         // [START configure_signin]
         // Configure sign-in to request the user's ID, email address, and basic
@@ -64,8 +63,6 @@ public class SignInActivity extends AppCompatActivity implements
                 .build();
         // [END configure_signin]
 
-
-
         // [START build_client]
         // Build a GoogleApiClient with access to the Google Sign-In API and the
         // options specified by gso.
@@ -74,8 +71,6 @@ public class SignInActivity extends AppCompatActivity implements
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
         // [END build_client]
-
-
 
         // [START customize_button]
         // Set the dimensions of the sign-in button.
@@ -115,8 +110,6 @@ public class SignInActivity extends AppCompatActivity implements
         super.onResume();
         hideProgressDialog();
     }
-
-
 
     // [START onActivityResult]
     @Override
@@ -227,6 +220,14 @@ public class SignInActivity extends AppCompatActivity implements
         }
     }
 
+    private void exitSignIn(){
+        Log.v("GO TO MAP","  GO TO MAP BUTTON WAS PRESSED");
+        Intent i = new Intent();
+        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        setResult(RESULT_OK);
+        finish();
+    }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -238,6 +239,9 @@ public class SignInActivity extends AppCompatActivity implements
                 break;
             case R.id.disconnect_button:
                 revokeAccess();
+                break;
+            case R.id.button_go_to_map:
+                exitSignIn();
                 break;
         }
     }

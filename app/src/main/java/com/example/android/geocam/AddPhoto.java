@@ -20,7 +20,7 @@ import android.widget.TextView;
 
 import com.google.android.gms.maps.model.LatLng;
 
-public class AddPhoto extends AppCompatActivity{
+public class AddPhoto extends AppCompatActivity implements View.OnClickListener{
 
     private ImageView mPhotoPreview;
     private EditText mPhotoDescription;
@@ -45,6 +45,10 @@ public class AddPhoto extends AppCompatActivity{
         mPhotoLocation = (TextView) findViewById(R.id.text_photo_long_lang);
         mApproveB = (Button) findViewById(R.id.action_approve);
         mCancelB = (Button) findViewById(R.id.action_cancel);
+
+        //click listeners for 'cancel' and 'approve' buttons
+        mApproveB.setOnClickListener(this);
+        mCancelB.setOnClickListener(this);
 
         geoPhoto = new GeoPhoto();
 
@@ -74,6 +78,22 @@ public class AddPhoto extends AppCompatActivity{
     }
 
     @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.action_approve:   /* section handles the click on 'approve' button, user returned to the main screen with an object holding the image and the location */
+                LatLng photoLatLng = new LatLng(myLat,myLong);
+                geoPhoto.setPhotoLocation(photoLatLng);
+                break;
+            case R.id.action_cancel:       /* section handles the click on 'cancel' button, user returned to the main screen without saving anything */
+                Intent i = new Intent();
+                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                setResult(RESULT_CANCELED);
+                finish();
+                break;
+        }
+    }
+
+    @Override
     protected void onStart() {
         super.onStart();
         mPhotoDescription.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -83,23 +103,6 @@ public class AddPhoto extends AppCompatActivity{
                     geoPhoto.setPhotoDescription(mPhotoDescription.getText().toString());
                 }
                 return false;
-            }
-        });
-
-        mApproveB.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                LatLng photoLatLng = new LatLng(myLat,myLong);
-                geoPhoto.setPhotoLocation(photoLatLng);
-            }
-        });
-        mCancelB.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent();
-                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                setResult(RESULT_CANCELED);
-                finish();
             }
         });
     }
@@ -120,5 +123,6 @@ public class AddPhoto extends AppCompatActivity{
             mPhotoLocation.setText(latLngToPrint);
         }
     }
+
 }
 

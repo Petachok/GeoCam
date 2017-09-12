@@ -28,10 +28,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private Context mainContext;
 
-    // Code for permission requests of location
+    // Request codes for the intents being used by the program
     private static final int LOCATION_REQUEST = 1;
-    private static final int ADDING_PHOTO_REQUEST = 2; // The request code
-
+    private static final int ADDING_PHOTO_REQUEST = 2;
+    private static final int SIGN_IN_REQUEST = 3;
     private GoogleMap mMap;
 
     LocationManager locationManager;
@@ -48,14 +48,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         mainContext = MapsActivity.this;
 
-        Intent signInIntent = new Intent(getApplicationContext(),SignInActivity.class);
-        startActivity(signInIntent);
-
         // granting permission for using location if not granted yet
         if (ContextCompat.checkSelfPermission(MapsActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(MapsActivity.this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_REQUEST);
         }
-
+        //location manager object for determining wether location services need to be turned on or not
         locationManager = (LocationManager) mainContext.getSystemService(Context.LOCATION_SERVICE);
 
         //if location services are disabled, ask the user to turn them on if he wants to add a new photo
@@ -83,6 +80,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mMap.addMarker(new MarkerOptions().position(telAviv).title("Marker in Tel Aviv"));
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(telAviv, 7.0f));
 
+        Intent signInIntent = new Intent(getApplicationContext(),SignInActivity.class);
+        startActivity(signInIntent);
     }
 
     //function creates menu icon for adding a new photo to the map
