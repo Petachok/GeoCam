@@ -4,16 +4,18 @@ import android.graphics.Path;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import java.io.File;
+
 // Class for storing the data of a new added photo
 public class GeoPhoto {
-    private Path takenPhotoPath;
+    private File takenPhotoPath;
     private String photoDescription;
     private LatLng photoLocation;
 
     public GeoPhoto(){
         photoDescription = new String();
         photoLocation = new LatLng(0,0);
-        takenPhotoPath = new Path();
+        takenPhotoPath = new File("");
     }
 
     //PhotoDescription Getter
@@ -33,11 +35,11 @@ public class GeoPhoto {
         this.photoLocation = photoLocation;
     }
     //Photo Saved Path Getter
-    public Path getTakenPhotoPath() {
+    public File getTakenPhotoPath() {
         return takenPhotoPath;
     }
     //Photo Saved Path Setter
-    public void setTakenPhotoPath(Path takenPhotoPath) {
+    public void setTakenPhotoPath(File takenPhotoPath) {
         this.takenPhotoPath = takenPhotoPath;
     }
 }

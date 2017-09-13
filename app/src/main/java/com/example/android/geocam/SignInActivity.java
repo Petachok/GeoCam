@@ -51,7 +51,6 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
 
         findViewById(R.id.sign_in_button).setOnClickListener(this);
         findViewById(R.id.sign_out_button).setOnClickListener(this);
-        findViewById(R.id.disconnect_button).setOnClickListener(this);
         findViewById(R.id.button_go_to_map).setOnClickListener(this);
 
         // [START configure_signin]
@@ -200,14 +199,11 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
         mProgressDialog.show();
     }
 
-
     private void hideProgressDialog() {
         if (mProgressDialog != null && mProgressDialog.isShowing()) {
             mProgressDialog.hide();
         }
     }
-
-
 
     private void updateUI(boolean signedIn) {
         if (signedIn) {
@@ -221,7 +217,7 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
     }
 
     private void exitSignIn(){
-        Log.v("GO TO MAP","  GO TO MAP BUTTON WAS PRESSED");
+        Log.v(TAG,"  GO TO MAP BUTTON WAS PRESSED");
         Intent i = new Intent();
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         setResult(RESULT_OK);
@@ -236,9 +232,6 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
                 break;
             case R.id.sign_out_button:
                 signOut();
-                break;
-            case R.id.disconnect_button:
-                revokeAccess();
                 break;
             case R.id.button_go_to_map:
                 exitSignIn();

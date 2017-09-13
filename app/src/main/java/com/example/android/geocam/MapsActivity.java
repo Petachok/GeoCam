@@ -6,7 +6,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.LocationManager;
-import android.os.Parcelable;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.os.Bundle;
@@ -16,6 +15,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -33,6 +33,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private static final int ADDING_PHOTO_REQUEST = 2;
     private static final int SIGN_IN_REQUEST = 3;
     private GoogleMap mMap;
+    private GoogleApiClient mGoogleApiClient;
 
     LocationManager locationManager;
 
